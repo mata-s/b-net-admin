@@ -241,7 +241,7 @@ export default function EventPage() {
               個人ユーザー向けリリースキャンペーン
             </h2>
             <p className="mt-1 text-xs text-zinc-500">
-              users コレクション配下の subscriptionに対して、キャンペーン用のサブスク付与／削除を行います。
+              キャンペーン用のサブスク付与／削除を行います。
             </p>
 
             <div className="mt-4 flex flex-col gap-2">
@@ -273,7 +273,7 @@ export default function EventPage() {
               チーム向けリリースキャンペーン
             </h2>
             <p className="mt-1 text-xs text-zinc-500">
-              teams コレクション配下の subscriptionに対して、キャンペーン用のサブスク付与／削除を行います。
+              キャンペーン用のサブスク付与／削除を行います。
             </p>
 
             <div className="mt-4 flex flex-col gap-2">
