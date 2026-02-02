@@ -15,7 +15,7 @@ import {
   setDoc,
   deleteDoc,
 } from "firebase/firestore";
-import { db } from "@/app/lib/firebaseClient"; // ensure Firebase app is initialized
+import { db } from "@/app/lib/firebaseClient";
 
 
 export default function EventPage() {
