@@ -1,8 +1,9 @@
-'use client';
+"use client";
 
-import { useEffect, useState } from 'react';
-import Link from 'next/link';
-import { collection, getDocs, orderBy, query, Timestamp } from 'firebase/firestore';
+import { useEffect, useState } from "react";
+import Link from "next/link";
+import { useRouter } from "next/navigation";
+import { collection, getDocs, orderBy, query, Timestamp } from "firebase/firestore";
 import { db } from "@/app/lib/firebaseClient";
 import { AdminHeader } from "@/app/components/AdminHeader";
 
@@ -18,34 +19,39 @@ type Report = {
 };
 
 const REASON_LABELS: Record<string, string> = {
-  inappropriate: '不適切な内容',
-  spam: 'スパム',
-  abuse: '暴言・嫌がらせ',
+  inappropriate: "不適切な内容",
+  spam: "スパム",
+  abuse: "暴言・嫌がらせ",
 };
 
 const CONTENT_TYPE_LABELS: Record<string, string> = {
-  user_profile: 'ユーザー',
-  team_profile: 'チーム',
+  user_profile: "ユーザー",
+  team_profile: "チーム",
 };
 
-export default function ReportsPage() {
+export default function ResolvedReportsPage() {
   const [reports, setReports] = useState<Report[]>([]);
   const [loading, setLoading] = useState(true);
+  const router = useRouter();
+
+  const handleBack = () => {
+    router.push("/reports");
+  };
 
   useEffect(() => {
     const fetchReports = async () => {
       const q = query(
-        collection(db, 'reports'),
-        orderBy('createdAt', 'desc')
+        collection(db, "reports"),
+        orderBy("createdAt", "desc")
       );
       const snapshot = await getDocs(q);
 
       const list: Report[] = snapshot.docs
         .map((doc) => ({
           id: doc.id,
-          ...(doc.data() as Omit<Report, 'id'>),
+          ...(doc.data() as Omit<Report, "id">),
         }))
-        .filter((r) => r.status !== 'resolved');
+        .filter((r) => r.status === "resolved");
 
       setReports(list);
       setLoading(false);
@@ -56,19 +62,19 @@ export default function ReportsPage() {
 
   return (
     <div className="p-6">
-      <AdminHeader active="notification"/>
+      <AdminHeader active="notification" />
       <div className="container mx-auto px-4 pt-6 lg:px-8 lg:pt-8">
-          <div className="flex flex-col gap-2 text-center sm:flex-row sm:items-center sm:justify-between sm:text-start">
-            <div className="grow">
-              <h1 className="mb-1 text-xl font-bold">通報一覧</h1>
-            </div>
+        <div className="flex flex-col gap-2 text-center sm:flex-row sm:items-center sm:justify-between sm:text-start">
+          <div className="grow">
+            <h1 className="mb-1 text-xl font-bold">対応済みの通報</h1>
           </div>
         </div>
+      </div>
 
       {loading ? (
         <p className="mt-4 text-sm text-gray-500">読み込み中...</p>
       ) : reports.length === 0 ? (
-        <p className="mt-4 text-sm text-gray-500">通報はありません</p>
+        <p className="mt-4 text-sm text-gray-500">対応済みの通報はありません</p>
       ) : (
         <div className="mt-6 overflow-x-auto">
           <table className="min-w-full border border-gray-200 text-sm">
@@ -92,7 +98,9 @@ export default function ReportsPage() {
                   <td className="border px-3 py-2">
                     {CONTENT_TYPE_LABELS[r.contentType] ?? r.contentType}
                   </td>
-                  <td className="border px-3 py-2">{REASON_LABELS[r.reason] ?? r.reason}</td>
+                  <td className="border px-3 py-2">
+                    {REASON_LABELS[r.reason] ?? r.reason}
+                  </td>
                   <td className="border px-3 py-2 max-w-md truncate" title={r.details}>
                     {r.details}
                   </td>
@@ -107,7 +115,7 @@ export default function ReportsPage() {
                       href={`/reports/${r.id}`}
                       className="text-sm font-medium text-blue-600 hover:underline"
                     >
-                     対応する
+                      詳細を見る
                     </Link>
                   </td>
                 </tr>
@@ -116,13 +124,15 @@ export default function ReportsPage() {
           </table>
         </div>
       )}
-      <div className="mt-6 text-center">
-        <Link
-          href="/reports/resolved"
-          className="text-sm font-medium text-gray-600 hover:text-gray-900 hover:underline"
+
+      <div className="mt-6 flex justify-center">
+        <button
+          type="button"
+          onClick={handleBack}
+          className="inline-flex items-center justify-center rounded-lg border border-zinc-300 bg-white px-6 py-2 text-sm font-semibold text-zinc-700 hover:bg-zinc-100 cursor-pointer"
         >
-          対応済みの通報を見る
-        </Link>
+          通報一覧に戻る
+        </button>
       </div>
     </div>
   );

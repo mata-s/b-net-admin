@@ -4,9 +4,10 @@ import { useState, useEffect } from "react";
 import { useRouter } from "next/navigation";
 import { collection, getDocs, query, where } from "firebase/firestore";
 import { db } from "@/app/lib/firebaseClient";
+import { getAuth, signOut } from "firebase/auth";
 
 type AdminHeaderProps = {
-  active?: "dashboard" | "users" | "teams" | "subscriptions" | "notification";
+  active?: "dashboard" | "users" | "teams" | "subscriptions" | "notification" | "notice" | "event";
 };
 
 export function AdminHeader({ active = "dashboard" }: AdminHeaderProps) {
@@ -32,6 +33,16 @@ export function AdminHeader({ active = "dashboard" }: AdminHeaderProps) {
 
   const isActive = (key: AdminHeaderProps["active"]) => active === key;
 
+  const handleLogout = async () => {
+    try {
+      const auth = getAuth();
+      await signOut(auth);
+      router.push("/login");
+    } catch (error) {
+      console.error("Logout failed:", error);
+    }
+  };
+
   return (
     <header className="mx-auto w-full flex-none xl:max-w-7xl">
       <div className="container mx-auto px-4 sm:px-0">
@@ -43,19 +54,11 @@ export function AdminHeader({ active = "dashboard" }: AdminHeaderProps) {
               onClick={() => router.push("/")}
               className="group inline-flex items-center gap-1.5 text-lg font-bold tracking-wide text-zinc-900 hover:text-zinc-600 cursor-pointer"
             >
-              <svg
-                xmlns="http://www.w3.org/2000/svg"
-                viewBox="0 0 20 20"
-                fill="currentColor"
-                className="inline-block size-5 text-purple-600"
-              >
-                <path d="M4.464 3.162A2 2 0 0 1 6.28 2h7.44a2 2 0 0 1 1.816 1.162l1.154 2.5c.067.145.115.291.145.438A3.508 3.508 0 0 0 16 6H4c-.288 0-.568.035-.835.1.03-.147.078-.293.145-.438l1.154-2.5Z" />
-                <path
-                  fillRule="evenodd"
-                  d="M2 9.5a2 2 0 0 1 2-2h12a2 2 0 1 1 0 4H4a2 2 0 0 1-2-2Zm13.24 0a.75.75 0 0 1 .75-.75H16a.75.75 0 0 1 .75.75v.01a.75.75 0 0 1-.75.75h-.01a.75.75 0 0 1-.75-.75V9.5Zm-2.25-.75a.75.75 0 0 0-.75.75v.01c0 .414.336.75.75.75H13a.75.75 0 0 0 .75-.75V9.5a.75.75 0 0 0-.75-.75h-.01ZM2 15a2 2 0 0 1 2-2h12a2 2 0 1 1 0 4H4a2 2 0 0 1-2-2Zm13.24 0a.75.75 0 0 1 .75-.75H16a.75.75 0 0 1 .75.75v.01a.75.75 0 0 1-.75.75h-.01a.75.75 0 0 1-.75-.75V15Zm-2.25-.75a.75.75 0 0 0-.75.75v.01c0 .414.336.75.75.75H13a.75.75 0 0 0 .75-.75V15a.75.75 0 0 0-.75-.75h-.01Z"
-                  clipRule="evenodd"
-                />
-              </svg>
+              <img
+                src="/icon.png"
+                alt="B-Net Admin Icon"
+                className="inline-block size-5"
+              />
               <span>B-Net 管理</span>
             </button>
           </div>
@@ -119,6 +122,40 @@ export function AdminHeader({ active = "dashboard" }: AdminHeaderProps) {
                   サブスクリプション
                 </button>
               )}
+
+            {/* お知らせ */}
+              {isActive("notice") ? (
+                <span className="group flex items-center gap-2 rounded-lg bg-purple-100 px-4 py-2 text-sm font-medium text-purple-950">
+                  お知らせ
+                </span>
+              ) : (
+                <button
+                  onClick={() => router.push("/notice")}
+                  className="group flex items-center gap-2 rounded-lg px-4 py-2 text-sm font-medium text-zinc-800 hover:bg-purple-100 hover:text-purple-950 active:bg-purple-200/75 cursor-pointer"
+                >
+                  お知らせ
+                </button>
+              )}
+              
+              {/* イベント */}
+              {isActive("event") ? (
+                <span className="group flex items-center gap-2 rounded-lg bg-purple-100 px-4 py-2 text-sm font-medium text-purple-950">
+                  イベント
+                </span>
+              ) : (
+                <button
+                  onClick={() => router.push("/event")}
+                  className="group flex items-center gap-2 rounded-lg px-4 py-2 text-sm font-medium text-zinc-800 hover:bg-purple-100 hover:text-purple-950 active:bg-purple-200/75 cursor-pointer"
+                >
+                  イベント
+                </button>
+              )}
+              <button
+                onClick={handleLogout}
+                className="group flex items-center gap-2 rounded-lg px-4 py-2 text-sm font-medium text-zinc-800 hover:bg-red-100 hover:text-red-700 active:bg-red-200/75 cursor-pointer"
+              >
+                ログアウト
+              </button>
             </nav>
 
             {/* 右上のボタン群（通知・ユーザー・モバイルメニュー） */}
@@ -128,7 +165,11 @@ export function AdminHeader({ active = "dashboard" }: AdminHeaderProps) {
                 <button
                   type="button"
                   onClick={() => setNotificationsOpen((v) => !v)}
-                  className="inline-flex items-center justify-center gap-1 rounded-lg border border-zinc-200 px-3 py-2 text-sm font-semibold text-zinc-800 hover:border-zinc-300 hover:text-zinc-950 cursor-pointer"
+                  className={`inline-flex items-center justify-center gap-1 rounded-lg px-3 py-2 text-sm font-semibold cursor-pointer ${
+                    isActive("notification")
+                      ? "bg-purple-100 text-purple-950 border border-purple-200"
+                      : "border border-zinc-200 text-zinc-800 hover:border-zinc-300 hover:text-zinc-950"
+                  }`}
                 >
                   {reportCount > 0 && (
                     <div className="absolute -end-2 -top-2">
@@ -162,25 +203,6 @@ export function AdminHeader({ active = "dashboard" }: AdminHeaderProps) {
                           {reportCount}
                         </span>
                       )}
-                    </button>
-                  </div>
-                )}
-              </div>
-
-              {/* ユーザーメニュー */}
-              <div className="relative inline-block">
-                <button
-                  type="button"
-                  onClick={() => setUserMenuOpen((v) => !v)}
-                  className="inline-flex items-center justify-center gap-1 rounded-lg border border-zinc-200 px-3 py-2 text-sm font-semibold text-zinc-800 hover:border-zinc-300 hover:text-zinc-950"
-                >
-                  <span className="hidden sm:inline">Admin</span>
-                  <span className="inline-block size-5 sm:hidden">👤</span>
-                </button>
-                {userMenuOpen && (
-                  <div className="absolute end-0 z-10 mt-2 w-32 rounded-lg bg-white py-2.5 shadow-xl ring-1 ring-black/5">
-                    <button className="block w-full px-4 py-1.5 text-left text-sm text-zinc-700 hover:bg-zinc-100">
-                      サインアウト（仮）
                     </button>
                   </div>
                 )}
@@ -255,6 +277,41 @@ export function AdminHeader({ active = "dashboard" }: AdminHeaderProps) {
                 }`}
               >
                 サブスクリプション
+              </button>
+              <button
+                onClick={() => {
+                  router.push("/notice");
+                  setMobileNavOpen(false);
+                }}
+                className={`group flex items-center gap-2 rounded-lg px-4 py-2 text-sm font-medium ${
+                  isActive("notice")
+                    ? "bg-purple-100 text-purple-950"
+                    : "text-zinc-800 hover:bg-purple-100 hover:text-purple-950"
+                }`}
+              >
+                お知らせ
+              </button>
+              <button
+                onClick={() => {
+                  router.push("/event");
+                  setMobileNavOpen(false);
+                }}
+                className={`group flex items-center gap-2 rounded-lg px-4 py-2 text-sm font-medium ${
+                  isActive("event")
+                    ? "bg-purple-100 text-purple-950"
+                    : "text-zinc-800 hover:bg-purple-100 hover:text-purple-950"
+                }`}
+              >
+                イベント
+              </button>
+              <button
+                onClick={async () => {
+                  await handleLogout();
+                  setMobileNavOpen(false);
+                }}
+                className="group flex items-center gap-2 rounded-lg px-4 py-2 text-sm font-medium text-red-700 hover:bg-red-100"
+              >
+                ログアウト
               </button>
             </nav>
           </div>

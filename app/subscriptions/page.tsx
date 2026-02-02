@@ -175,25 +175,28 @@ export default function SubscriptionsPage() {
         }
 
         // ---- 売上計算 ----
-        const userMonthlyRevenue =
+        const userMonthlyRevenue = Math.floor(
           userMonthlyCount * PERSONAL_MONTHLY_PRICE +
-          (userYearlyCount * PERSONAL_YEARLY_PRICE) / 12;
+          (userYearlyCount * PERSONAL_YEARLY_PRICE) / 12
+        );
 
         const userYearlyRevenue =
           userMonthlyCount * PERSONAL_MONTHLY_PRICE * 12 +
           userYearlyCount * PERSONAL_YEARLY_PRICE;
 
-        const teamGoldMonthlyRevenue =
+        const teamGoldMonthlyRevenue = Math.floor(
           teamGoldMonthlyCount * TEAM_GOLD_MONTHLY_PRICE +
-          (teamGoldYearlyCount * TEAM_GOLD_YEARLY_PRICE) / 12;
+          (teamGoldYearlyCount * TEAM_GOLD_YEARLY_PRICE) / 12
+        );
 
         const teamGoldYearlyRevenue =
           teamGoldMonthlyCount * TEAM_GOLD_MONTHLY_PRICE * 12 +
           teamGoldYearlyCount * TEAM_GOLD_YEARLY_PRICE;
 
-        const teamPlatinaMonthlyRevenue =
+        const teamPlatinaMonthlyRevenue = Math.floor(
           teamPlatinaMonthlyCount * TEAM_PLATINA_MONTHLY_PRICE +
-          (teamPlatinaYearlyCount * TEAM_PLATINA_YEARLY_PRICE) / 12;
+          (teamPlatinaYearlyCount * TEAM_PLATINA_YEARLY_PRICE) / 12
+        );
 
         const teamPlatinaYearlyRevenue =
           teamPlatinaMonthlyCount * TEAM_PLATINA_MONTHLY_PRICE * 12 +
@@ -295,7 +298,7 @@ export default function SubscriptionsPage() {
                       月間売上（見込み）
                     </span>
                     <span className="mt-2 text-2xl font-bold">
-                      ￥{totalMonthlyRevenue.toLocaleString()}
+                      ￥{Math.floor(totalMonthlyRevenue).toLocaleString()}
                     </span>
                     <span className="mt-1 text-xs text-zinc-500">
                       年プランを月換算した合計
@@ -388,7 +391,7 @@ export default function SubscriptionsPage() {
                       売上
                     </p>
                     <p className="mt-2 text-lg font-bold">
-                      月：￥{stats.userMonthlyRevenue.toLocaleString()}
+                      月：￥{Math.floor(stats.userMonthlyRevenue).toLocaleString()}
                     </p>
                     <p className="mt-1 text-xs text-zinc-400">
                       ※ 年額プランを月換算した見込み金額
@@ -433,7 +436,7 @@ export default function SubscriptionsPage() {
                       売上
                     </p>
                     <p className="mt-2 text-lg font-bold">
-                      月：￥{stats.teamGoldMonthlyRevenue.toLocaleString()}
+                      月：￥{Math.floor(stats.teamGoldMonthlyRevenue).toLocaleString()}
                     </p>
                     <p className="mt-1 text-xs text-zinc-400">
                       ※ 年額プランを月換算した見込み金額
@@ -478,7 +481,7 @@ export default function SubscriptionsPage() {
                       売上
                     </p>
                     <p className="mt-2 text-lg font-bold">
-                      月：￥{stats.teamPlatinaMonthlyRevenue.toLocaleString()}
+                      月：￥{Math.floor(stats.teamPlatinaMonthlyRevenue).toLocaleString()}
                     </p>
                     <p className="mt-1 text-xs text-zinc-400">
                       ※ 年額プランを月換算した見込み金額

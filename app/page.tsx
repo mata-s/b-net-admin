@@ -305,7 +305,7 @@ export default function DashboardPage() {
 
       // ユーザー（個人）サブスクのトータル
       const userMonthlyTotal = userMonthlyCount * USER_MONTHLY_PRICE;
-      const userYearlyTotal = userYearlyCount * (USER_YEARLY_PRICE / 12);
+      const userYearlyTotal = Math.floor((userYearlyCount * USER_YEARLY_PRICE) / 12);
       const userTotalCount = userMonthlyCount + userYearlyCount;
       const userTotalAmount = userMonthlyTotal + userYearlyTotal;
 
@@ -323,7 +323,7 @@ export default function DashboardPage() {
 
       const teamYearlyTotalAmount =
         teamGoldYearlyCount * (TEAM_GOLD_YEARLY_PRICE / 12) +
-        teamPlatinaYearlyCount * (TEAM_PLATINA_YEARLY_PRICE / 12);
+        Math.floor((teamPlatinaYearlyCount * TEAM_PLATINA_YEARLY_PRICE) / 12);
 
       const teamMonthlyTotalCount =
         teamGoldMonthlyCount + teamPlatinaMonthlyCount;
@@ -380,7 +380,7 @@ export default function DashboardPage() {
           {/* 見出し */}
           <div className="flex flex-col gap-2 text-center sm:flex-row sm:items-center sm:justify-between sm:text-start">
             <div className="grow">
-              <h1 className="mb-1 text-xl font-bold">Dashboard</h1>
+              <h1 className="mb-1 text-xl font-bold">ホーム</h1>
               <h2 className="text-sm font-medium text-zinc-500">
                 登録ユーザー
                 <strong> {userCount !== null ? `${userCount}人` : " 読み込み中"}</strong>
@@ -393,7 +393,7 @@ export default function DashboardPage() {
                 <strong>
                   {" "}
                   {allSubTotalAmount !== null
-                    ? `¥${allSubTotalAmount.toLocaleString()}`
+                    ? `¥${Math.floor(allSubTotalAmount).toLocaleString()}`
                     : "集計中..."}
                 </strong>
               </p>
@@ -515,7 +515,7 @@ export default function DashboardPage() {
           teamSubPlatinaYearlyCount !== null
             ? `¥${(
                 teamSubPlatinaMonthlyCount * 16000 +
-                teamSubPlatinaYearlyCount * (19400 / 12)
+                Math.floor(teamSubPlatinaYearlyCount * (19400 / 12))
               ).toLocaleString()}`
             : "-"
         }
@@ -523,7 +523,7 @@ export default function DashboardPage() {
           teamSubPlatinaMonthlyCount !== null &&
           teamSubPlatinaYearlyCount !== null
             ? `月 ¥${(teamSubPlatinaMonthlyCount * 16000).toLocaleString()} / 年(月換算) ¥${(
-                teamSubPlatinaYearlyCount * (19400 / 12)
+                Math.floor(teamSubPlatinaYearlyCount * (19400 / 12))
               ).toLocaleString()}`
             : "プラチナ売上（月換算）集計中..."
         }
@@ -533,13 +533,13 @@ export default function DashboardPage() {
         label="サブスク売上（月換算・チーム合計）"
         value={
           teamSubTotalAmount !== null
-            ? `¥${teamSubTotalAmount.toLocaleString()}`
+            ? `¥${Math.floor(teamSubTotalAmount).toLocaleString()}`
             : "-"
         }
         footer={
           teamSubMonthlyTotalAmount !== null &&
           teamSubYearlyTotalAmount !== null
-            ? `月合計 ¥${teamSubMonthlyTotalAmount.toLocaleString()} / 年(月換算)合計 ¥${teamSubYearlyTotalAmount.toLocaleString()}`
+            ? `月合計 ¥${Math.floor(teamSubMonthlyTotalAmount).toLocaleString()} / 年(月換算)合計 ¥${Math.floor(teamSubYearlyTotalAmount).toLocaleString()}`
             : "チーム売上（月換算）集計中..."
         }
       />
@@ -548,47 +548,6 @@ export default function DashboardPage() {
         {/* グラフエリア */}
         <div className="container mx-auto px-4 pb-8 lg:px-8">
           <div className="grid grid-cols-1 gap-6 lg:grid-cols-2">
-            {/* 売上推移（直近6ヶ月） */}
-            <div className="rounded-lg border border-zinc-200 bg-white p-4">
-              <h3 className="mb-3 text-sm font-semibold text-zinc-700">
-                直近6ヶ月の売上推移（ユーザー＋チーム合算）
-              </h3>
-              {last6MonthsLabels.length > 0 ? (
-                <div className="h-56">
-                  <Bar
-                    data={{
-                      labels: last6MonthsLabels,
-                      datasets: [
-                        {
-                          label: "月換算売上（円）",
-                          data: last6MonthsRevenue,
-                        },
-                      ],
-                    }}
-                    options={{
-                      responsive: true,
-                      maintainAspectRatio: false,
-                      plugins: {
-                        legend: {
-                          display: false,
-                        },
-                      },
-                      scales: {
-                        y: {
-                          ticks: {
-                            callback: (value) =>
-                              `¥${Number(value).toLocaleString()}`,
-                          },
-                        },
-                      },
-                    }}
-                  />
-                </div>
-              ) : (
-                <p className="text-xs text-zinc-500">売上データ集計中...</p>
-              )}
-            </div>
-
             {/* 登録ユーザー数推移（直近6ヶ月） */}
             <div className="rounded-lg border border-zinc-200 bg-white p-4">
               <h3 className="mb-3 text-sm font-semibold text-zinc-700">
