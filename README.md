@@ -1,36 +1,66 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# Baseball Net Admin
 
-## Getting Started
+Admin dashboard for Baseball Net.
 
-First, run the development server:
 
-```bash
-npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
-```
+---
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+## Screenshots
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+### Admin Dashboard
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+![](images/dashboard.png)
 
-## Learn More
+> Note: The numbers shown in this screenshot are sample data for demonstration purposes only.
 
-To learn more about Next.js, take a look at the following resources:
+---
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+## Features
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
+- User management
+- Team management
+- Report moderation
+- Subscription management
+- Admin notices
+- Operational dashboard
 
-## Deploy on Vercel
+---
 
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
+## Tech Stack
 
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+### Frontend
+
+- Next.js
+- TypeScript
+- React
+
+### Backend
+
+- Firebase
+
+### Deployment
+
+- Vercel
+
+---
+
+## Purpose
+
+This dashboard was built to support the operation and management of the Baseball Net mobile application.
+
+---
+
+## Note
+
+This is an internal admin tool. Public login is not available.
+
+---
+
+## Author
+
+### Shinshun Matayoshi
+
+Flutter Developer from Japan
+
+GitHub:
+https://github.com/mata-s
